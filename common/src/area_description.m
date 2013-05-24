@@ -6,7 +6,7 @@
 %    bar_lo     -   высота низкого столбца
 %%
 
-function [ bars, width ] = area_description(stud_num, bar_hi, bar_lo)
+function [ bars ] = area_description(stud_num, bar_hi, bar_lo)
 
     % Очевидно, что столбцов будет  ceil(log2(stud_num))
     bitcount = ceil(log2(stud_num));

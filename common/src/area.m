@@ -15,23 +15,28 @@
 %                 второй начинается 0.1 и заканчивается в 0.2
 %                 и т.д.
 %    bar_heighs - высоты столбцов по порядку.
+%    ! Длинны векторов должны совпадать.
 %
 %    x          - координата по x в которой начинается область
 %
 %    y          - координата по y в которой начинается область
 
-function [ area ] = area(bar_heighs, bar_sizes, x, y)
+function [ area ] = area(bar_heights, bar_sizes, x, y)
     function [ a ] = area_f(u, v)
         % Смещаем область в 0, 0
         u = u - x;
         v = v - y;
 
         j = 1;
-        while(u < bar_sizes(j))
+        while (j <= length(bar_sizes)) && (u > bar_sizes(j))
             j = j + 1;
         end
 
-        a = ( v < bar_heights(j) );
+        if (j > length(bar_sizes))
+            a = 0;
+        else
+            a = ( v < bar_heights(j) );
+        end
     end
 
     area = @area_f;
