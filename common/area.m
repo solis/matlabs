@@ -47,7 +47,7 @@ function [ area ] = area(stud_num, bar_sizes, bar_hi, bar_lo, x, y)
 
     % Высоты
     heights = zeros([1, bitcount]);
-    for i = 1:BITCOUNT
+    for i = 1:bitcount
         % Ну понятно: если bits[i] == 1 => 1 * bar_hi + (1 - 1) * bar_lo, иначе 0 * bar_hi + (1 - 0) * bar_lo
         heights(i) = bits(i) * bar_hi + (1 - bits(i)) * bar_lo;
     end
@@ -57,13 +57,12 @@ function [ area ] = area(stud_num, bar_sizes, bar_hi, bar_lo, x, y)
         u = u - x;
         v = v - y;
 
-
         j = 1;
         while(u < bar_sizes(j))
             j = j + 1;
         end
 
-        a = ( v < heights(j - 1) );
+        a = ( v < heights(j) );
     end
 
     area = @area_f;
