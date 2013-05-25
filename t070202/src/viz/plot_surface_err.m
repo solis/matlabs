@@ -1,20 +1,21 @@
-function [] = plot_surface(X, T, U, U_a)
+function [] = plot_err(X, T, U, U_a)
     figure;
     subplot(2, 1, 1)
-        surface(X, T, U)
+        [C, h] = contourf(X, T, U);
         shading flat;
-        title('Absolute error surface');
+        title('Absolute error');
         xlabel('x');
         ylabel('t');
-        zlabel('Absolute error at (x,t)');
-        view(-99, 51);
+        clabel(C, h);
+        colorbar('location', 'EastOutside');
+
 
     subplot(2, 1, 2)
-        surface(X, T, U_a)
+        [C, h] = contourf(X, T, U_a);
         shading flat;
-        title('Relative error surface');
+        title('Relative error');
         xlabel('x');
         ylabel('t');
-        zlabel('Relative error at (x,t)');
-        view(-99, 51)
+        clabel(C, h);
+        colorbar('location', 'EastOutside');
 end
