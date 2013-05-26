@@ -7,11 +7,11 @@ function [ f ] = task_function(bar_heights, bar_sizes, x, y)
             u = u - x;
 
             j = 1;
-            while (j <= length(bar_sizes)) && (u > bar_sizes(j))
+            while (j <= length(bar_sizes)) & (u > bar_sizes(j))
                 j = j + 1;
             end
 
-            if (j > length(bar_sizes) || (u < 0))
+            if (j > length(bar_sizes) | (u < 0))
                 v = 0;
             else
                 v = y + bar_heights(j);
