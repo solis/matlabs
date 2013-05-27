@@ -9,12 +9,12 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     widths = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
     x_0 = 0;
     y_0 = 0;
-    X_STEP = 0.01;
+    X_STEP = 0.05;
 
     task_f = task_function(bars, widths, x_0, y_0);
 
-    function [ hlegendre ] = Legendre(task_f, summ_count)
-        function [ y ] = f(x)
+    function [ hlegendre ] = Legendre(f, summ_count)
+        function [ y ] = partial_summ(x)
             % значения в точке x n первых функций Лежандра.
             P_n = legendre(summ_count, x, 'norm');
 
@@ -31,13 +31,15 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
             end
             y = 0;
             for k = 1:summ_count
-                y = y + P_n(k)*quad(@(t) task_f(t) * legendren(k,t), -1, 1);
+                % Здесь нормировать функции не надо, потому что legendre(summ_count, x, 'norm')
+                % вернет нормированные функции.
+                y = y + P_n(k)*quad(@(t) f(t) * legendren(k,t), -1, 1);
             end
         end
-        hlegendre = @f;
+        hlegendre = @partial_summ;
     end
 
-    function [ hbessel ] = Bessel(task_f, summ_count)
+    function [ hbessel ] = Bessel(f, summ_count)
         function [ z ] = besselzero(alpha, n)
             z = fzero(@(x)besselj(alpha , x), n);
         end
@@ -48,14 +50,14 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
         end
 
 
-        function [ y ] = f(x)
+        function [ y ] = partial_summ(x)
             y = 0;
             for k = 1:summ_count
-                y = y + besselj(summ_count, x*Z(k))*quad(@(t) task_f(t)*besselj(summ_count, Z(k)*t), -pi, pi);
+                y = y + besselj(summ_count, x*Z(k))*quad(@(t) f(t)*besselj(summ_count, Z(k)*t), -pi, pi);
             end
         end
 
-        hbessel = @f;
+        hbessel = @partial_summ;
     end
 
     X = (x_0):X_STEP:(max(widths) + x_0);
