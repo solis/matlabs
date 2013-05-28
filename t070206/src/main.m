@@ -70,8 +70,8 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
         end
 
         Z = zeros(summ_count);
-        for k = 1:length(Z)
-            Z(k) = besselzero(summ_count, k);
+        for j = 1:length(Z)
+            Z(j) = besselzero(summ_count, j);
         end
 
 
@@ -87,13 +87,17 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
         hbessel = @partial_summ;
     end
 
+    % Сетка для Лежандра, на которой будем приближать функцию
     X_leg = -1:X_STEP:1;
-    X_acl = -1:0.00005:1;
+    % Сетка для Бесселя, на которой будем приближать функцию
     X_bes =  0:X_STEP:1;
-    X_acb =  0:0.00005:1;
+    % Accurate grid для построения точной формы. Ну чтобы красиво.
+    X_acc = x_0:0.00005:(x_0 + max(widths));
 
-    F_leg = f_legendre(X_acl);
-    F_bes = f_bessel(X_acb);
+    % Значения нашей функции на аккуратной сетке.
+    F = task_f(X_acc);
+
+    % Подготовим векторы для приближенных форм.
     B = zeros(1, length(X_bes));
     L = zeros(1, length(X_leg));
 
@@ -109,6 +113,13 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     for i = 1:length(X_leg)
         L(i) = alegendre(X_leg(i));
     end
+
+
+    % Имея значения функции на [-1, 1] и [0, 1]
+    % нужно выполнить обратное преобразование
+    % т.е. просто нужно выполнить преобразование для нашей сетки
+    X_leg = gl(X_leg);
+    X_bes = gb(X_bes);
 
     %%
     %   Функция для построения графиков приближенной и точной формы
@@ -131,9 +142,9 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     end
 
     subplot(2, 1, 1);
-    plot_series(X_acl, F_leg, X_leg, L, 'Legendre');
+    plot_series(X_acc, F, X_leg, L, 'Legendre');
 
     subplot(2, 1, 2);
-    plot_series(X_acb, F_bes, X_bes, B, 'Bessel');
+    plot_series(X_acc, F, X_bes, B, 'Bessel');
 
 end
