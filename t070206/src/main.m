@@ -1,4 +1,4 @@
-%%
+%% Основной код Лабораторной работы #2
 % stud_num   - номер студента
 % bar_hi     - высота большого столбца
 % bar_lo     - высота маленького столбца
@@ -13,18 +13,11 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
 
     task_f = task_function(bars, widths, x_0, y_0);
 
-<<<<<<< HEAD
     %% Лежандр
     % Нам нужно, чтобы функция была определена на [-1, 1]
     % Поэтому
     % gl1(t): gl1([-1, 1]) -> [0, 1]
     gl1 = @(t) (t+1) / 2;
-=======
-    function [ hlegendre ] = Legendre(f, summ_count)
-        function [ y ] = partial_summ(x)
-            % значения в точке x n первых функций Лежандра.
-            P_n = legendre(summ_count, x, 'norm');
->>>>>>> 765e5453739a2bc13ab58d629ca95954f3ac35dc
 
     % gl2(t): gl2([0, 1]) -> [x_0, x_0 + w],
     %где w = max(widths), последняя точка определенности функции
@@ -48,7 +41,10 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
 
 
     % Потом выполним приближение
-    % Функция разложения в ряд Фурье по функциям Лежандра
+    %% Функция разложения в ряд Фурье по функциям Лежандра
+    % f          -   функция, которую собираемся аппроксимировать
+    % summ_count -   число частных сумм
+    % See http://mathworld.wolfram.com/Fourier-LegendreSeries.html
     function [ hlegendre ] = Legendre(f, summ_count)
         function [ y ] = partial_summ(x)
             % Это скорее всего будет не очень эффективно, но пока так
@@ -64,45 +60,39 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
             end
             y = quad(@(t) f(t), -1, 1) / 2;
             for k = 1:summ_count
-<<<<<<< HEAD
                 y = y + legendren(k, x)*quad(@(t) f(t) .* legendren(k,t), -1, 1);
-=======
-                % Здесь нормировать функции не надо, потому что legendre(summ_count, x, 'norm')
-                % вернет нормированные функции.
-                y = y + P_n(k)*quad(@(t) f(t) * legendren(k,t), -1, 1);
->>>>>>> 765e5453739a2bc13ab58d629ca95954f3ac35dc
             end
         end
         hlegendre = @partial_summ;
     end
 
-<<<<<<< HEAD
-    % Функция разложения в ряд Фурье по функциям Бесселя
-=======
->>>>>>> 765e5453739a2bc13ab58d629ca95954f3ac35dc
+    %% Функция разложения в ряд Фурье по функциям Бесселя
+    % f          -   функция, которую собираемся аппроксимировать
+    % summ_count -   число частных сумм
+    % See http://www.math.upenn.edu/~rimmer/math241/ch12sc6frbess.pdf
     function [ hbessel ] = Bessel(f, summ_count)
+
+        % Порядок функции Бесселя
+        %nu = summ_count;
+        nu = summ_count;
+
         function [ z ] = besselzero(alpha, n)
             z = fzero(@(x)besselj(alpha , x), n);
         end
 
         Z = zeros(summ_count);
         for j = 1:length(Z)
-            Z(j) = besselzero(summ_count, j);
+            % Это собственное j-j значение
+            Z(j) = besselzero(nu, j);
         end
 
 
         function [ y ] = partial_summ(x)
-<<<<<<< HEAD
-             y = quad(@(t) f(t), -pi, pi) / (2*pi);
-            for k = 1:summ_count
-                coeff = quad(@(t) f(t) .* besselj(summ_count,t), -pi, pi);
-                %norm = quad(@(t) besselj(summ_count, x*Z(k)))
-                y = y + besselj(summ_count, x*Z(k))*coeff;
-=======
             y = 0;
             for k = 1:summ_count
-                y = y + besselj(summ_count, x*Z(k))*quad(@(t) f(t)*besselj(summ_count, Z(k)*t), -pi, pi);
->>>>>>> 765e5453739a2bc13ab58d629ca95954f3ac35dc
+                coeff = quad(@(t) t .* besselj(nu, Z(k) * t) .* f(t), 0, 1);
+                norm = 2 / ( besselj(nu + 1, Z(k)).^2 );
+                y = y + besselj(nu, x * Z(k)) * coeff * norm;
             end
         end
 
@@ -143,8 +133,8 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     X_leg = gl(X_leg);
     X_bes = gb(X_bes);
 
-    %%
-    %   Функция для построения графиков приближенной и точной формы
+
+    %%   Функция для построения графиков приближенной и точной формы
     %   X_F   - сетка для F
     %   F     - точная форма (значения)
     %   X_A   - сетка для A
