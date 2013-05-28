@@ -2,15 +2,13 @@
 % stud_num   - номер студента
 % bar_hi     - высота большого столбца
 % bar_lo     - высота маленького столбца
+% widths     - широты столбцов, считая, что первый столбец начинается в 0.
+%              каждое следующее значение дает конец столбца по x.
 % summ_count - число частных сумм рядов
-
-function [] = main(stud_num, bar_hi, bar_lo, summ_count)
+%
+function [] = main(stud_num, bar_hi, bar_lo, widths, x_0, y_0, summ_count)
     bars = area_description(stud_num, bar_hi, bar_lo);
-    widths = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
-    x_0 = 2;
-    y_0 = 0;
     X_STEP = 0.05;
-
     task_f = task_function(bars, widths, x_0, y_0);
 
     %% Лежандр
@@ -29,6 +27,7 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
 
     % Тогда функция для разложения по полиномам Лежандра
     f_legendre = @(t) task_f(gl(t));
+
 
     %% Бессель
     % Тут в некотором смысле проще
@@ -70,29 +69,42 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     % f          -   функция, которую собираемся аппроксимировать
     % summ_count -   число частных сумм
     % See http://www.math.upenn.edu/~rimmer/math241/ch12sc6frbess.pdf
+    % See https://www.math.lsu.edu/~rich/4038_Downloads/Bessel_Series_example.pdf
     function [ hbessel ] = Bessel(f, summ_count)
-
         % Порядок функции Бесселя
-        %nu = summ_count;
-        nu = summ_count;
+        nu = 0;
 
         function [ z ] = besselzero(alpha, n)
             z = fzero(@(x)besselj(alpha , x), n);
         end
 
-        Z = zeros(summ_count);
-        for j = 1:length(Z)
-            % Это собственное j-j значение
-            Z(j) = besselzero(nu, j);
+        %% Округлим до нужного порядка после запятой
+        function [ Y ] = rounddig(X, n)
+            Y = round(X*10.^n)/10.^n;
         end
 
+        Z = [];
+        % Так мы должны исключить 0. Так как это 0 любой другой функции Бесселя.
+        last_zero = 0;
+        while (length(Z) < summ_count)
+            last_zero = last_zero + 1;
+            next_zero = besselzero(nu, last_zero);
+            while (rounddig(next_zero, 5) == 0)
+                last_zero  = last_zero + 1;
+                next_zero = besselzero(nu, last_zero);
+            end
+
+            % Уберем все повторяющиеся нули (кратности больше чем 1).
+            % Округляем, потому что совпадают они неточно
+             Z = unique(rounddig([Z, next_zero], 5));
+        end
 
         function [ y ] = partial_summ(x)
             y = 0;
             for k = 1:summ_count
-                coeff = quad(@(t) t .* besselj(nu, Z(k) * t) .* f(t), 0, 1);
-                norm = 2 / ( besselj(nu + 1, Z(k)).^2 );
-                y = y + besselj(nu, x * Z(k)) * coeff * norm;
+                coeff = quad(@(t) besselj(nu, Z(k) * t) .* f(t), 0, 1);
+                norm = (( besselj(nu + 1, Z(k)) ).^2) / 2;
+                y = y + besselj(nu, x * Z(k)) * coeff / norm;
             end
         end
 
@@ -102,7 +114,7 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     % Сетка для Лежандра, на которой будем приближать функцию
     X_leg = -1:X_STEP:1;
     % Сетка для Бесселя, на которой будем приближать функцию
-    X_bes =  0:X_STEP:1;
+    X_bes =  0:0.1:1;
     % Accurate grid для построения точной формы. Ну чтобы красиво.
     X_acc = x_0:0.00005:(x_0 + max(widths));
 
@@ -114,14 +126,16 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     L = zeros(1, length(X_leg));
 
     % Получим хэндл функции, которая вычисляет приближенное значение с базисом Бесселя
-    abessel = Bessel(f_bessel, summ_count);
+    abessel = Bessel(@(t) sin(t), summ_count);
     % Получим хэндл функции, которая вычисляет приближенное значение с базисом Лежандра
     alegendre = Legendre(f_legendre, summ_count);
 
+    disp('Computing Legendre...')
     for i = 1:length(X_bes)
         B(i) = abessel(X_bes(i));
     end
 
+    disp('Computing Bessel...');
     for i = 1:length(X_leg)
         L(i) = alegendre(X_leg(i));
     end
@@ -132,7 +146,6 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
     % т.е. просто нужно выполнить преобразование для нашей сетки
     X_leg = gl(X_leg);
     X_bes = gb(X_bes);
-
 
     %%   Функция для построения графиков приближенной и точной формы
     %   X_F   - сетка для F
@@ -158,4 +171,5 @@ function [] = main(stud_num, bar_hi, bar_lo, summ_count)
 
     subplot(2, 1, 2);
     plot_series(X_acc, F, X_bes, B, 'Bessel');
+
 end
