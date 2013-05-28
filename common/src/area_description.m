@@ -11,12 +11,6 @@ function [ bars ] = area_description(stud_num, bar_hi, bar_lo)
     % Очевидно, что столбцов будет  ceil(log2(stud_num))
     bitcount = ceil(log2(stud_num));
 
-    % Высота высокго столбца
-    bar_hi = 1;
-
-    % Высота низкого столбца
-    bar_lo = 0.3;
-
     % Биты, соотвествующие нашему номеру
     bits = [];
     num = stud_num;
