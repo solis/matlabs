@@ -14,10 +14,10 @@ function t071602
     psi = @(x) (3*x.^2 - x + 3);
 
     x_min = 0; 
-    x_max = 2;
+    x_max = 3;
     x_count = 20;
     t_min = 0;
-    t_max = 2;
+    t_max = 3;
     t_count = 20;
 
     x_h = (x_max - x_min) / x_count;
@@ -27,13 +27,12 @@ function t071602
 
     %% Построение численного и аналитического решений
     
-    disp('Computing..');
     U = @(x,t) (compute_v(x, t, a, phi, psi) + compute_w(x, t, a, f) + compute_z(x, t, a, mu));
 
     u_analytical = @(x, t) (2 + 3*t.^3 - 3*x - x.^2 + 3*x.^3 - t.^2*(2 + 3*x) + t*(3 - x + 3*x.^2));
     u_numerical = @(x, t) U(x, t);
-
-    % Построение сеток численного и аналитического решений
+    
+    disp('Computing..');
     analytical_grid = zeros(length(X), length(T));
     numerical_grid = zeros(length(X), length(T));
     for x = 1:length(X)
