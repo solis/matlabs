@@ -10,7 +10,7 @@ function visualize(x_min, x_max, X, T, analytical_grid, numerical_grid)
     grid on;
     hold on;
         surf(X, T, analytical_grid, 'EdgeColor', 'none');
-        set(gca, 'CameraPosition', [0, 0, 45]);
+        set(gca, 'CameraPosition', [0, 0, 60]);
         title('Поверхность точного решения');
         xlabel('x');
         ylabel('t');
@@ -22,7 +22,7 @@ function visualize(x_min, x_max, X, T, analytical_grid, numerical_grid)
     grid on;
     hold on;
         surf(X, T, numerical_grid, 'EdgeColor', 'none');
-        set(gca, 'CameraPosition', [0, 0, 45]);
+        set(gca, 'CameraPosition', [0, 0, 60]);
         title('Поверхность приближённого решения');
         xlabel('x');
         ylabel('t');
@@ -105,7 +105,7 @@ function visualize(x_min, x_max, X, T, analytical_grid, numerical_grid)
             ylabel ('u(x,t)');
             pause(0.05);
         end
-        title('Нажмите кнопку мыши для повтора или любую клавишу для завершения.');
+        title('Сделайте клик мышью для повтора или нажмите любую клавишу на клавиатуре для завершения.');
         w = waitforbuttonpress;
     end   
     close;
