@@ -78,17 +78,15 @@ function [] = main(stud_num, bar_hi, bar_lo, widths, x_0, y_0, summ_count)
             z = fzero(@(x) besselj(alpha , x), [(n-1), n]*pi);
         end
 
-        Z =zeros(summ_count);
+        Z =zeros(1,summ_count);
         for p = 1:summ_count
             Z(p) = besselzero(nu, p);
         end
 
-        Z
-
         function [ y ] = partial_summ(x)
             y = 0;
             for k = 1:summ_count
-                coeff = quad(@(t) besselj(nu, Z(k) * t) .* f(t), 0, 1);
+                coeff = quad(@(t) t .* besselj(nu, Z(k) * t) .* f(t), 0, 1);
                 norm = (( besselj(nu + 1, Z(k)) ).^2) / 2;
                 y = y + besselj(nu, x * Z(k)) * coeff / norm;
             end
