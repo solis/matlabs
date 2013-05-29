@@ -75,29 +75,15 @@ function [] = main(stud_num, bar_hi, bar_lo, widths, x_0, y_0, summ_count)
         nu = 0;
 
         function [ z ] = besselzero(alpha, n)
-            z = fzero(@(x)besselj(alpha , x), n);
+            z = fzero(@(x) besselj(alpha , x), [(n-1), n]*pi);
         end
 
-        %% Округлим до нужного порядка после запятой
-        function [ Y ] = rounddig(X, n)
-            Y = round(X*10.^n)/10.^n;
+        Z =zeros(summ_count);
+        for p = 1:summ_count
+            Z(p) = besselzero(nu, p);
         end
 
-        Z = [];
-        % Так мы должны исключить 0. Так как это 0 любой другой функции Бесселя.
-        last_zero = 0;
-        while (length(Z) < summ_count)
-            last_zero = last_zero + 1;
-            next_zero = besselzero(nu, last_zero);
-            while (rounddig(next_zero, 5) == 0)
-                last_zero  = last_zero + 1;
-                next_zero = besselzero(nu, last_zero);
-            end
-
-            % Уберем все повторяющиеся нули (кратности больше чем 1).
-            % Округляем, потому что совпадают они неточно
-             Z = unique(rounddig([Z, next_zero], 5));
-        end
+        Z
 
         function [ y ] = partial_summ(x)
             y = 0;
@@ -126,7 +112,7 @@ function [] = main(stud_num, bar_hi, bar_lo, widths, x_0, y_0, summ_count)
     L = zeros(1, length(X_leg));
 
     % Получим хэндл функции, которая вычисляет приближенное значение с базисом Бесселя
-    abessel = Bessel(@(t) sin(t), summ_count);
+    abessel = Bessel(@(t) f_bessel(t), summ_count);
     % Получим хэндл функции, которая вычисляет приближенное значение с базисом Лежандра
     alegendre = Legendre(f_legendre, summ_count);
 
