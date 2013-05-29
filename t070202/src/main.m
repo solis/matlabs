@@ -1,5 +1,5 @@
 function [] = main 
-    X = 0:0.1:3;
+    X = 1:0.5:7;
 
     T_MAX =  max(X) / a;
     T_COUNT = 10;
