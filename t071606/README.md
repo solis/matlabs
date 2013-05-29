@@ -1,5 +1,5 @@
 # matlabs
-**Дополнительная лабораторная работа №3. ID: 716**
+**Дополнительная лабораторная работа №3([t070206](/t070206) remix). ID: 716.**
 
 *All thanks to [@iarkhanhelsky](https://github.com/iarkhanhelsky)*
 
