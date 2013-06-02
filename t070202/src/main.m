@@ -1,5 +1,5 @@
 function [] = main
-    X = 1:0.5:7;
+    X = 0:0.5:3;
 
     T_MAX =  max(X) / a;
     T_COUNT = 10;
@@ -17,7 +17,7 @@ function [] = main
 
     plot_surface_err(X, T, ERR_ABS, ERR_REL);
 
-    viz_boundary(X, T, U);
+    viz_boundary(X, T);
 
     animate_solution(X, T, U, U_a);
 end

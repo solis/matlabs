@@ -1,10 +1,15 @@
-function [] = viz_boundary(X, Y, U)
+function [] = viz_boundary(X, Y)
     figure;
+
+    Uxzero = zeros(1, length(X));
+    for i = 1:length(X)
+        Uyzero(i) = numeric_solution(X(i), 0);
+    end
 
     subplot(2, 1, 1)
     hold on;
         plot(X, phi(X), 'color', 'red', 'LineWidth', 3);
-        plot(X, U(1,1:length(X)), 'color', 'blue', 'LineWidth', 2);
+        plot(X, Uyzero, 'color', 'blue', 'LineWidth', 2);
         plot(X, analytic_solution(X, 0), 'color', 'green')
     hold off;
     xlabel('x');
