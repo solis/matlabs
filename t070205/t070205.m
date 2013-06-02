@@ -1,6 +1,6 @@
 function [] = t070205
 
-    load('t070205/pde_solution.mat');
+    load('t070205/solution.mat');
 
     X = 0:0.01:1;
     Y = 0:0.01:1;
@@ -8,7 +8,7 @@ function [] = t070205
     UXY = tri2grid(p, t, u, X, Y);
 
     [X, Y] = meshgrid(X, Y);
-    AXY = cos(20 .* (X - 1) .* (Y - 1));
+    AXY = X.*cos(Y) + Y.*sin(X);
     AXY(isnan(UXY)) = NaN;
 
     AERR = abs(UXY - AXY);
