@@ -20,6 +20,9 @@ function t071605
     y_min = 1;
     y_max = 2.3;
     step = 0.01;
+    
+    area_x = [ 1, 1, 1.1000000000000001, 1.1000000000000001, 1.3999999999999999, 1.3999999999999999, 1.8, 1.8, 2.1000000000000001, 2.1000000000000001, 2.6000000000000001, 2.6000000000000001, 3, 3, 1];
+    area_y = [ 1, 2.2999999999999998, 2.2999999999999998, 1.3, 1.3, 2.2999999999999998, 2.2999999999999998, 1.3, 1.3, 2.2999999999999998, 2.2999999999999998, 1.3, 1.3, 1, 1];
 
     x = x_min:step:x_max;
     y = y_min:step:y_max;
@@ -28,14 +31,12 @@ function t071605
     
     % Решение, полученное с помощью pdetool
     pdetool_solution = tri2grid(p, t, u, x, y);
-
-    U = @(x,y) ((x.^2).*sin(2*y));
     
     % Точное решения
     [X, Y] = meshgrid(x, y);
-    exact_solution = U(X, Y);
+    exact_solution = (X.^2).*sin(2*Y);
     exact_solution(isnan(pdetool_solution)) = NaN;
     
     % Визуализация решений
-    visualize(X, Y, exact_solution, pdetool_solution);
+    visualize(X, Y, x_min, x_max, y_min, y_max, area_x, area_y, exact_solution, pdetool_solution);
 end
