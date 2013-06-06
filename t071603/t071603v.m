@@ -1,9 +1,9 @@
 function t071603v
     clc; clear all;
     
-    disp('Loading solutions..');
+    disp('Loading variables..');
     load('solutions.mat');
-    clc;
+    %
     
     disp('Visualising solutions..');
     scrsz = get(0, 'ScreenSize');
