@@ -11,3 +11,5 @@ outgoing/*
 *.aux
 *.log
 *.toc
+
+*.pdf
