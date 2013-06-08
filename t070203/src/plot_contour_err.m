@@ -1,4 +1,4 @@
-function [] = plot_err(X, T, U, U_a)
+function [] = plot_contour_err(X, T, U, U_a)
     figure;
     subplot(2, 1, 1)
         [C, h] = contourf(X, T, U, 20);
