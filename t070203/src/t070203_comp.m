@@ -85,7 +85,7 @@ function [] = t070203_comp
     function [ y ] = Tkf(k, t)
         options = odeset('RelTol', 1e-10);
         [odet Tk ] = ode45(@(u, v)  -9*lambda(k)*v(1) + gk(k, u), [ T_MIN T_MAX ], [ xik(k) ], options);
-        y = interp1(odet, Tk, t, 'linear');
+        y = interp1(odet, Tk, t, 'spline');
     end
 
 %%% Считаем Tk и само решение %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
