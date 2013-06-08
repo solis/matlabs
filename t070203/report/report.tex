@@ -1,0 +1,95 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{lstcustom}
+\usepackage{graphicx}
+\usepackage{geometry} % Меняем поля страницы
+\geometry{left=2cm}% левое поле
+\geometry{right=1.5cm}% правое поле
+\geometry{top=1cm}% верхнее поле
+\geometry{bottom=2cm}% нижнее поле
+\renewcommand\lstlistingname{Листинг}
+\renewcommand\contentsname{Содержание}
+\renewcommand\partname{ }
+\renewcommand{\thepart}{\arabic{part}}
+
+
+\begin{document}
+  \begin{description}
+    \item[\textbf{Заданная функция:}] \[  u(x, t) = -\sin(2x-3)\cos(2t+3)e^{-3t^2-1} \]
+    \item[\textbf{Граничные условия:}] II-рода слева, II-рода справа
+    \item[\textbf{Тип уравнения:}] Параболическое
+    \item[a:] 3
+    \item[L:] 1
+  \end{description}
+
+Получаем задачу
+\begin{equation}\label{eq:probl}
+  \begin{array}{lll}
+    u_t  & = &  9u_{xx} + f \\
+    u_x|_{x=0}& = & -2*\cos(-3)\cos(2t+3)e^{-3t^2-1} = \mu(t) \\
+    u_x|_{x=1} & = &-2*\cos(-1)\cos(2t+3)e^{-3t^2-1} = \nu(t)\\
+    u|_{t=0}   & =  &-\sin(2x-3)\cos(3)e^{-1} = \varphi(x)
+  \end{array}
+  \end{equation}
+
+Приведем граничные условия к однородным, для этого представим функцию в виде $u = v + w$, где $w$ удовлетворяет граничным условиям задачи (\ref{eq:probl}):
+\begin{equation}
+  \begin{array}{lll}
+    w_x|_{x=0} &=& \mu(t) \\
+    w_x|_{x=1} &=& \nu(t) \\
+  \end{array}
+\end{equation}
+
+Тогда
+  \[ w(x, t) = (x - \frac{x^2}{2})\mu(t) + \frac{x^2}{2}\nu(t) \]
+
+Теперь решаем задачу Штурма-Лиувилля вида
+\begin{equation}
+  \begin{array}{lll}
+    X'' - \lambda X  &= & 0 \\
+    X'(0) & = & 0 \\
+    X'(1) & = & 0 \\
+  \end{array}
+\end{equation}
+
+Получили множество собственных функций
+\[ X_0(x) = 1, ~ X_k(x) = cos(\sqrt(\lambda_k)x),~ k \in \mathbb{N},  \]
+c соотвествующими им собственными значениями
+\[ \lambda_0 = 0, ~ \lambda_k = (\pi k)^2\]
+
+Представив решение задачи
+
+  \begin{equation}\label{eq:problv}
+  \begin{array}{lll}
+    v_t  & = &  9v_{xx} + 9w_{xx} - w_t + f = 9v_{xx} + g \\
+    v_x|_{x=0}& = & 0 \\
+    v_x|_{x=1} & = &0\\
+    v|_{t=0}   & =  &\varphi(x) - w(x, 0)
+  \end{array}
+  \end{equation}
+
+в виде
+\[ v(x, t) = \sum_{k=0}^{\infty} X_k(x) T_k(t), \]
+где $Tk$ -- коэффициенты разложения $v$ в ряд Фурье по базису $X_k$, получим новую задачу для отыскания $T_k$ :
+\begin{equation}
+  \begin{array}{l}
+  T_k' = -9\lambda_k T + g_k(t) \\
+  T_k(0) = \phi_k
+  \end{array}
+\end{equation}
+
+ где
+ \[ g_k(t) = \frac{1}{||Xk||^2}\int_0^1 g(x, t) X_k(x) dx, ~ \varphi_k = \frac{1}{||Xk||^2}\int_0^1 \varphi(x) X_k(x) dx \]
+
+
+ Решив эту задачу, получим решение исходной
+ \[ u(x, t) = w(x, t) + \sum_{k=0}^\infty X_k(x) T_k(t)\]
+\end{document}
+
+
