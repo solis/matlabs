@@ -30,7 +30,7 @@ matlab party zone
 
 ## Решения
   * [t070202](t070202/) | [Readme](t070202/Readme.md)
-  * [t071602](t070216/) | [Readme](t071602/Readme.md)
+  * [t071602](t071602/) | [Readme](t071602/Readme.md)
   
 # Лабораторная работа 3
 
